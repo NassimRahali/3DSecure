@@ -12,27 +12,23 @@ import java.util.List;
  *
  * @author Nassim
  */
-public class ReqMarchand implements Serializable {
+public class ReqProduits implements Serializable {
 
     static final long serialVersionUID = 42L;
 
     public static final int PROD = 0;
-    public static final int CMD = 1;
-    public static final int ARP = 3;
-
+    
     private int type;
 
-    private List produits;
+    private List<Produit> produits;
 
-    public ReqMarchand() {
+    public ReqProduits() {}
 
-    }
-
-    public ReqMarchand(int type) {
+    public ReqProduits(int type) {
         this.type = type;
     }
 
-    public ReqMarchand(int type, List produits) {
+    public ReqProduits(int type, List produits) {
         this.type = type;
         this.produits = produits;
     }

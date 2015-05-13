@@ -10,11 +10,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLSocket;
 import javax.swing.table.DefaultTableModel;
+import marchand.Produit;
+import marchand.ReqMarchand;
+
 
 /**
  *
@@ -92,17 +96,17 @@ public class Main extends javax.swing.JFrame
             },
             new String []
             {
-                "Produit", "Prix", "Quantité", "Commander"
+                "Produit", "Prix", "Quantité"
             }
         )
         {
             Class[] types = new Class []
             {
-                java.lang.String.class, java.lang.Float.class, java.lang.Integer.class, java.lang.Boolean.class
+                java.lang.String.class, java.lang.Float.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean []
             {
-                false, false, true, true
+                false, false, true
             };
 
             public Class getColumnClass(int columnIndex)
@@ -120,6 +124,13 @@ public class Main extends javax.swing.JFrame
 
         bCommander.setText("Commander");
         bCommander.setEnabled(false);
+        bCommander.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                bCommanderActionPerformed(evt);
+            }
+        });
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -171,19 +182,27 @@ public class Main extends javax.swing.JFrame
             
             model.setRowCount(0);
             
-            for (Produit p : lProduits)
+            for (int i = 0 ; i < req.getProduits().size() ; i++)
             {
+                Produit p = (Produit)req.getProduits().get(i);
                 model.addRow(new Object[]{p.getNom(), p.getPrix(), false, 0});
             }
             
             this.bCommander.setEnabled(true);
             this.tProduits.setEnabled(true);
         }
-        catch (IOException ex)
+        catch (IOException | ClassNotFoundException ex)
         {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_bConnexionActionPerformed
+
+    private void bCommanderActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_bCommanderActionPerformed
+    {//GEN-HEADEREND:event_bCommanderActionPerformed
+        HashMap <Produit, Integer> commande;
+        
+        this.tProduits.getSelectedRows();
+    }//GEN-LAST:event_bCommanderActionPerformed
     
     /**
      * @param args the command line arguments

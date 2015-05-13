@@ -11,3 +11,5 @@ CHB/.DS_Store
 DS/.DS_Store
 MSPI/.DS_Store
 SSL/.DS_Store
+/3DSecureLib/build/
+/3DSecureLib/dist/
