@@ -6,6 +6,7 @@
 package cha;
 
 import SSL.SSL;
+import java.util.List;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -32,7 +33,8 @@ public class Main extends javax.swing.JFrame
     private SSLSocket cSock;
     private ObjectInputStream ois;
     private ObjectOutputStream oos;
-    
+ 
+    private List<Produit> produits;
     
     public Main()
     {
@@ -72,6 +74,8 @@ public class Main extends javax.swing.JFrame
         jScrollPane1 = new javax.swing.JScrollPane();
         tProduits = new javax.swing.JTable();
         bCommander = new javax.swing.JButton();
+        tfNumCarte = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
 
         jMenu1.setText("jMenu1");
@@ -131,6 +135,8 @@ public class Main extends javax.swing.JFrame
                 bCommanderActionPerformed(evt);
             }
         });
+
+        jLabel1.setText("Numéro de carte");
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -144,7 +150,11 @@ public class Main extends javax.swing.JFrame
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(bConnexion, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bCommander, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)))
+                        .addComponent(bCommander, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfNumCarte, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -155,8 +165,15 @@ public class Main extends javax.swing.JFrame
                     .addComponent(bConnexion, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                     .addComponent(bCommander, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 1, Short.MAX_VALUE)
+                        .addComponent(tfNumCarte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
 
         pack();
@@ -170,21 +187,20 @@ public class Main extends javax.swing.JFrame
             ois = (ObjectInputStream) cSock.getInputStream();
             oos = (ObjectOutputStream) cSock.getOutputStream();
             
-            ReqMarchand req = new ReqMarchand();
-            req.setType(req.PROD);
+            ReqMarchand req = new ReqMarchand(ReqMarchand.PROD);            
             
             oos.writeObject(req);
             
-            req = (ReqMarchand)ois.readObject();
-            ois.readObject();
+            req = (ReqMarchand)ois.readObject();            
+            
+            this.produits = req.getProduits();
             
             DefaultTableModel model = (DefaultTableModel)this.tProduits.getModel();
             
             model.setRowCount(0);
             
-            for (int i = 0 ; i < req.getProduits().size() ; i++)
+            for (Produit p : this.produits)
             {
-                Produit p = (Produit)req.getProduits().get(i);
                 model.addRow(new Object[]{p.getNom(), p.getPrix(), false, 0});
             }
             
@@ -199,9 +215,27 @@ public class Main extends javax.swing.JFrame
 
     private void bCommanderActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_bCommanderActionPerformed
     {//GEN-HEADEREND:event_bCommanderActionPerformed
-        HashMap <Produit, Integer> commande;
+        try
+        {
+            HashMap <Produit, Integer> commande = new HashMap<>();
+            
+            int[] selected = this.tProduits.getSelectedRows();
+            for(int i = 0 ; i < selected.length ; i++)
+            {
+                commande.put(produits.get(i), (Integer) this.tProduits.getValueAt(i, 2));
+            }
+            
+            ReqMarchand req = new ReqMarchand(ReqMarchand.CMD);
+            req.setCommande(commande);
+            
+            oos.writeObject(req);
+            
+        } 
+        catch (IOException ex)
+        {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-        this.tProduits.getSelectedRows();
     }//GEN-LAST:event_bCommanderActionPerformed
     
     /**
@@ -253,9 +287,11 @@ public class Main extends javax.swing.JFrame
     private javax.swing.JButton bCommander;
     private javax.swing.JButton bConnexion;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tProduits;
+    private javax.swing.JTextField tfNumCarte;
     // End of variables declaration//GEN-END:variables
 }
