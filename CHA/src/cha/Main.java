@@ -6,6 +6,7 @@
 package cha;
 
 import SSL.SSL;
+import VER.VERP;
 import java.util.List;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.SSLSocket;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import marchand.Produit;
 import marchand.ReqMarchand;
@@ -230,8 +232,20 @@ public class Main extends javax.swing.JFrame
             
             oos.writeObject(req);
             
+            VERP repVERP = (VERP)ois.readObject();
+            if(repVERP.getType() == VERP.SUCCESS)
+            {
+                Authentication dial = new Authentication(this, true, repVERP.getIPACS(), repVERP.getPORTACS());
+                dial.setVisible(true);
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this, "Verify Enrollment Request Failed !");
+                System.exit(1);
+            }
+            
         } 
-        catch (IOException ex)
+        catch (IOException | ClassNotFoundException ex)
         {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }

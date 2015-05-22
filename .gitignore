@@ -13,3 +13,6 @@ MSPI/.DS_Store
 SSL/.DS_Store
 /3DSecureLib/build/
 /3DSecureLib/dist/
+/ACS/nbproject/private/
+ACS/.DS_Store
+/CHA/build/
