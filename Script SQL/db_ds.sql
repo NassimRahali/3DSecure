@@ -18,9 +18,10 @@ create table cartes(
 );
 
 -- Seulement en localhost pour l'exam
-insert into banques values (1, 'BANK1', 'localhost', 90001);
-insert into banques values (2, 'BANK2', 'localhost', 90002);
-insert into banques values (3, 'BANK3', 'localhost', 90003);
+-- J'avais mis des ports hors du range autorisé
+insert into banques values (1, 'BANK1', '127.0.0.1', 9999);
+insert into banques values (2, 'BANK2', '127.0.0.1', 9998);
+insert into banques values (3, 'BANK3', '127.0.0.1', 9997);
 
 -- Faudra utiliser ces ids aussi.
 insert into cartes values ('123456789', 1);
