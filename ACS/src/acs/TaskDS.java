@@ -41,10 +41,10 @@ public class TaskDS implements Runnable
         try
         {
             Properties prop = new Properties();
-            FileInputStream fis = new FileInputStream("ACS.properties");
+            FileInputStream fis = new FileInputStream("ACS2.properties");
             prop.load(fis);
             
-            PORTACS = Integer.parseInt(prop.getProperty("port", "7373"));
+            PORTACS = Integer.parseInt(prop.getProperty("portACSCLI", "9666"));
             IPACS = this.cSock.getInetAddress().toString();
             fis.close();
         } catch (IOException ex)
@@ -58,28 +58,40 @@ public class TaskDS implements Runnable
     {
         try
         {
-            oos = new ObjectOutputStream(cSock.getOutputStream());         
+            oos = new ObjectOutputStream(cSock.getOutputStream());
+            oos.flush();
             ois = new ObjectInputStream(cSock.getInputStream());            
+            
             if(ois == null || oos == null)
                 System.exit(1);
             else
-                System.out.println("Flux créés");
+                System.out.println("[AC - DS] Flux créés");
             
+            System.out.println("[AC - DS] Waiting for VERQ...");
             VERQ req = (VERQ)ois.readObject();
+            
+            System.out.println("[AC - DS] VERQ received...");
             VERP rep = new VERP();
-            if(DB.db.containsKey(req.getNumCard()))
+            
+            // TODO via BDD + cardOwner.
+            System.out.println("[AC - DS] Numcard is :" + req.getNumCard());
+            
+            if(DB.db.containsKey((int)req.getNumCard()))
             {
                 rep.setType(VERP.SUCCESS);
                 rep.setIPACS(IPACS);
                 rep.setPORTACS(PORTACS);
+                System.out.println("[AC - DS] IPACS : " + IPACS);
+                System.out.println("[AC - DS] PORT AUTH : " + PORTACS);
             }
             else
                 rep.setType(VERP.FAIL);
-            
+            System.out.println("[AC - DS] Sending VERP... (" + rep.getType() + ") (1 = success, 2 = failure)");
             oos.writeObject(rep);
-            
+            System.out.println("[AC - DS] Closing streams.");
             oos.close();
             ois.close();
+            System.out.println("[AC - DS] Closing socket.");
             cSock.close();
         }        
         catch (IOException | ClassNotFoundException ex)

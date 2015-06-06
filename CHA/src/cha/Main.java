@@ -21,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import marchand.Produit;
 import marchand.ReqMarchand;
+import mspi.ReqMSPI;
 
 
 /**
@@ -37,6 +38,8 @@ public class Main extends javax.swing.JFrame
     private ObjectOutputStream oos;
  
     private List<Produit> produits;
+    private String mspiAddr;
+    private int mspiPort;
     
     public Main()
     {
@@ -49,8 +52,8 @@ public class Main extends javax.swing.JFrame
             FileInputStream fis = new FileInputStream("CHA.properties");
             prop.load(fis);
             
-            PORT = Integer.parseInt(prop.getProperty("port", "7300"));
-            IP = prop.getProperty("ip", "127.0.0.1");
+            PORT = Integer.parseInt(prop.getProperty("marchandPort", "6666"));
+            IP = prop.getProperty("marchandAddr", "127.0.0.1");
             
             fis.close();
         } catch (IOException ex)
@@ -67,8 +70,7 @@ public class Main extends javax.swing.JFrame
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents()
-    {
+    private void initComponents() {
 
         jMenu1 = new javax.swing.JMenu();
         jButton1 = new javax.swing.JButton();
@@ -78,6 +80,7 @@ public class Main extends javax.swing.JFrame
         bCommander = new javax.swing.JButton();
         tfNumCarte = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        lblStatus = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
 
         jMenu1.setText("jMenu1");
@@ -87,41 +90,32 @@ public class Main extends javax.swing.JFrame
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         bConnexion.setText("Connexion");
-        bConnexion.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        bConnexion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bConnexionActionPerformed(evt);
             }
         });
 
         tProduits.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][]
-            {
+            new Object [][] {
 
             },
-            new String []
-            {
+            new String [] {
                 "Produit", "Prix", "Quantité"
             }
-        )
-        {
-            Class[] types = new Class []
-            {
+        ) {
+            Class[] types = new Class [] {
                 java.lang.String.class, java.lang.Float.class, java.lang.Integer.class
             };
-            boolean[] canEdit = new boolean []
-            {
+            boolean[] canEdit = new boolean [] {
                 false, false, true
             };
 
-            public Class getColumnClass(int columnIndex)
-            {
+            public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
 
-            public boolean isCellEditable(int rowIndex, int columnIndex)
-            {
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
@@ -130,15 +124,21 @@ public class Main extends javax.swing.JFrame
 
         bCommander.setText("Commander");
         bCommander.setEnabled(false);
-        bCommander.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
+        bCommander.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bCommanderActionPerformed(evt);
             }
         });
 
+        tfNumCarte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfNumCarteActionPerformed(evt);
+            }
+        });
+
         jLabel1.setText("Numéro de carte");
+
+        lblStatus.setText("Status :");
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -148,13 +148,14 @@ public class Main extends javax.swing.JFrame
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(bConnexion, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bCommander, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(bCommander, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tfNumCarte, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -169,13 +170,12 @@ public class Main extends javax.swing.JFrame
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 1, Short.MAX_VALUE)
-                        .addComponent(tfNumCarte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tfNumCarte)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -185,9 +185,15 @@ public class Main extends javax.swing.JFrame
     {//GEN-HEADEREND:event_bConnexionActionPerformed
         try
         {
-            cSock = SSL.getSSLSocket(IP, PORT);
-            ois = (ObjectInputStream) cSock.getInputStream();
-            oos = (ObjectOutputStream) cSock.getOutputStream();
+            System.out.println("Trying ip : " + IP);
+            System.out.println("Trying port : " + PORT);
+            cSock = SSL.getSSLSocket("127.0.0.1", 6666);
+            System.out.println("Opening streams");
+
+            oos = new ObjectOutputStream(cSock.getOutputStream());
+            oos.flush();
+            ois = new ObjectInputStream(cSock.getInputStream());
+
             
             ReqMarchand req = new ReqMarchand(ReqMarchand.PROD);            
             
@@ -203,7 +209,7 @@ public class Main extends javax.swing.JFrame
             
             for (Produit p : this.produits)
             {
-                model.addRow(new Object[]{p.getNom(), p.getPrix(), false, 0});
+                model.addRow(new Object[]{p.getNom(), p.getPrix(), 0});
             }
             
             this.bCommander.setEnabled(true);
@@ -232,7 +238,30 @@ public class Main extends javax.swing.JFrame
             
             oos.writeObject(req);
             
-            VERP repVERP = (VERP)ois.readObject();
+            // Recevoir le port et l'adresse du MSPI
+            ReqMarchand repmarchand = (ReqMarchand) ois.readObject();
+            this.mspiAddr = repmarchand.getMspiAddr();
+            this.mspiPort = repmarchand.getMspiPort();
+            
+            System.out.println("Trying with IP : " + this.mspiAddr);
+            System.out.println("Trying with PORT : " + this.mspiPort);
+            
+            // Obtenir une connection sur le MSPI
+            SSLSocket mspiSock = SSL.getSSLSocket(this.mspiAddr, this.mspiPort);
+            ObjectOutputStream oos_mspi = new ObjectOutputStream(mspiSock.getOutputStream());
+            oos_mspi.flush();
+            ObjectInputStream ois_mspi = new ObjectInputStream(mspiSock.getInputStream());
+            
+            // Requête sur le MSPI
+            ReqMSPI reqmspi = new ReqMSPI();
+            reqmspi.setCardNumber(Long.parseLong(this.tfNumCarte.getText()));
+            reqmspi.setCardOwner("nassim");
+            System.out.println("Sending " + reqmspi.getCardNumber() + " | " + reqmspi.getCardOwner());
+            reqmspi.setType(ReqMSPI.VERIF);
+            
+            oos_mspi.writeObject(reqmspi);
+            
+            VERP repVERP = (VERP)ois_mspi.readObject();
             if(repVERP.getType() == VERP.SUCCESS)
             {
                 Authentication dial = new Authentication(this, true, repVERP.getIPACS(), repVERP.getPORTACS());
@@ -251,6 +280,10 @@ public class Main extends javax.swing.JFrame
         }
         
     }//GEN-LAST:event_bCommanderActionPerformed
+
+    private void tfNumCarteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfNumCarteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfNumCarteActionPerformed
     
     /**
      * @param args the command line arguments
@@ -305,6 +338,7 @@ public class Main extends javax.swing.JFrame
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblStatus;
     private javax.swing.JTable tProduits;
     private javax.swing.JTextField tfNumCarte;
     // End of variables declaration//GEN-END:variables

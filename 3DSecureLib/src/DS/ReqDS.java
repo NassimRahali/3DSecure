@@ -18,7 +18,9 @@ public class ReqDS implements Serializable
     public static final int VERIF = 1;
 
     private int type;
-    private String numCarte;
+    private long cardNumber;
+    private String cardOwner;
+    private int status;
 
     public ReqDS() {}
     
@@ -27,10 +29,11 @@ public class ReqDS implements Serializable
         this.type = type;
     }
     
-    public ReqDS(int type, String numCarte)
+    public ReqDS(int type, String nom, long number)
     {
         this.type = type;
-        this.numCarte = numCarte;
+        this.cardNumber = number;
+        this.cardOwner = nom;
     }
 
     public int getType()
@@ -43,15 +46,27 @@ public class ReqDS implements Serializable
         this.type = type;
     }
 
-    public String getNumCarte()
-    {
-        return numCarte;
+    public long getCardNumber() {
+        return cardNumber;
     }
 
-    public void setNumCarte(String numCarte)
-    {
-        this.numCarte = numCarte;
+    public String getCardOwner() {
+        return cardOwner;
+    }
+
+    public void setCardNumber(long cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public void setCardOwner(String cardOwner) {
+        this.cardOwner = cardOwner;
+    }
+
+    public int getStatus() {
+        return this.status;
     }
     
-    
+    public void setStatus(int status) {
+        this.status = status;
+    }
 }

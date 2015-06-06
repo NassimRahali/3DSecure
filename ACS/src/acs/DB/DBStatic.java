@@ -13,13 +13,11 @@ import java.util.HashMap;
  */
 public class DBStatic
 {
-    public HashMap<String, Integer> db;
+    public HashMap<Integer, Integer> db;
     
     public DBStatic()
     {
         db = new HashMap<>();
-        db.put("cisco", "cisco".hashCode());
-        db.put("cisco1", "cisco1".hashCode());
-        db.put("cisco2", "cisco2".hashCode());
+        db.put(123456789, 123456789);
     }
 }

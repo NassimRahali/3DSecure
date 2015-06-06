@@ -15,23 +15,23 @@ public class VERQ implements Serializable
 {
     static final long serialVersionUID = 73;
 
-    private String numCard;
+    private long numCard;
     private String cardOwner;
     
     public VERQ() {}
 
-    public VERQ(String numCard, String cardOwner)
+    public VERQ(long numCard, String cardOwner)
     {
         this.numCard = numCard;
         this.cardOwner = cardOwner;
     }
 
-    public String getNumCard()
+    public long getNumCard()
     {
         return numCard;
     }
 
-    public void setNumCard(String numCard)
+    public void setNumCard(long numCard)
     {
         this.numCard = numCard;
     }

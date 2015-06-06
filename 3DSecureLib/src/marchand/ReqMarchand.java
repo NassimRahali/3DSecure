@@ -26,7 +26,12 @@ public class ReqMarchand implements Serializable {
     private List<Produit> produits;
     private HashMap<Produit, Integer> commande;
     private String numCarte;
-
+    
+    private String mspiAddr;
+    private int mspiPort;
+    private int status;
+    private float total;
+    
     public ReqMarchand() {}
 
     public ReqMarchand(int type) {
@@ -73,6 +78,44 @@ public class ReqMarchand implements Serializable {
         this.numCarte = numCarte;
     }
 
+    public void setMspi(String addr, int port) {
+        this.mspiAddr = addr;
+        this.mspiPort = port;
+    }
+    
+    public void setMspiAddr(String mspiAddr) {
+        this.mspiAddr = mspiAddr;
+    }
 
+    public void setMspiPort(int mspiPort) {
+        this.mspiPort = mspiPort;
+    }
+    
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public float getTotal() {
+        return total;
+    }
+
+    public String getMspiAddr() {
+        return mspiAddr;
+    }
+
+    public int getMspiPort() {
+        return mspiPort;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+    
+    public void computeTotal() {
+        this.total = 0;
+        this.commande.forEach( (prod, qte) -> {
+            total += qte * prod.getPrix();
+        });
+    }
 
 }

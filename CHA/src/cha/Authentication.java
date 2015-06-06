@@ -156,8 +156,8 @@ public class Authentication extends javax.swing.JDialog
         try
         {
             cSock = SSL.getSSLSocket(IP, PORT);
-            ois = (ObjectInputStream) cSock.getInputStream();
-            oos = (ObjectOutputStream) cSock.getOutputStream();
+            ois = new ObjectInputStream(cSock.getInputStream());
+            oos = new ObjectOutputStream(cSock.getOutputStream());
             
             ARQ req = new ARQ(this.tfNumCarte.getText());
             oos.writeObject(req);
