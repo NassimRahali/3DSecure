@@ -83,6 +83,7 @@ class Main2 extends Thread {
             int POOL_SIZE = 0;
             int MAX_POOL_SIZE = 0;
             int KEEP_ALIVE = 0;
+            String ipSNMP = "";
 
             // <editor-fold defaultstate="collapsed" desc="Load Properties">
             try {
@@ -94,6 +95,7 @@ class Main2 extends Thread {
                 POOL_SIZE = Integer.parseInt(prop.getProperty("poosSize", "3"));
                 MAX_POOL_SIZE = Integer.parseInt(prop.getProperty("maxPoolSize", "5"));
                 KEEP_ALIVE = Integer.parseInt(prop.getProperty("keepAlive", "10"));
+                ipSNMP = prop.getProperty("ipSNMP", "192.168.94.142");
 
                 fis.close();
             } catch (IOException ex) {
@@ -122,7 +124,7 @@ class Main2 extends Thread {
                 System.out.println("[AUTH] PORT AUTH : " + PORT);
                 SSLSocket cSock = (SSLSocket) sSock.accept();
                 System.out.println("Connexion de " + cSock.getInetAddress() + ":" + cSock.getPort());
-                threads.pool.execute(new TaskClient(cSock));
+                threads.pool.execute(new TaskClient(cSock, ipSNMP));
             }
         } catch (IOException ex) {
             Logger.getLogger(Main2.class.getName()).log(Level.SEVERE, null, ex);
