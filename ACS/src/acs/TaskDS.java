@@ -45,7 +45,8 @@ public class TaskDS implements Runnable
             prop.load(fis);
             
             PORTACS = Integer.parseInt(prop.getProperty("portACSCLI", "9666"));
-            IPACS = this.cSock.getInetAddress().toString();
+            IPACS = prop.getProperty("ipACS", "127.0.0.1");
+            
             fis.close();
         } catch (IOException ex)
         {

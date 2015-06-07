@@ -23,7 +23,7 @@ public class MySQLHelper {
 
     public Connection getDSConnection() throws ClassNotFoundException {
         try {
-            String url = "jdbc:mysql://localhost:3306/BD_DS";
+            String url = "jdbc:mysql://localhost:3306/DB_DS";
 
             conn = DriverManager.getConnection(url, "root", "");
         } catch (SQLException ex) {

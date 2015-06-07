@@ -103,7 +103,7 @@ class Main2 extends Thread {
 
             Pool threads = new Pool(POOL_SIZE, MAX_POOL_SIZE, KEEP_ALIVE);
 
-            ServerSocket sSock = new ServerSocket(PORT);
+            SSLServerSocket sSock = SSL.getSSLServerSocket(PORT);
 
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 public void run() {

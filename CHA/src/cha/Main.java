@@ -264,7 +264,9 @@ public class Main extends javax.swing.JFrame
             VERP repVERP = (VERP)ois_mspi.readObject();
             if(repVERP.getType() == VERP.SUCCESS)
             {
-                Authentication dial = new Authentication(this, true, repVERP.getIPACS(), repVERP.getPORTACS());
+                System.out.println("ipACS : " + repVERP.getIPACS());
+                System.out.println("portACS : " + repVERP.getPORTACS());
+                Authentication dial = new Authentication(this, false, repVERP.getIPACS(), repVERP.getPORTACS());
                 dial.setVisible(true);
             }
             else
