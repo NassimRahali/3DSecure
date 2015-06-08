@@ -18,6 +18,6 @@ public class DBStatic
     public DBStatic()
     {
         db = new HashMap<>();
-        db.put(123456789, 123456789);
+        db.put(123456789, new String("1234").hashCode());
     }
 }

@@ -95,10 +95,10 @@ public class TaskClient implements Runnable
             target.setRetries(2);
             target.setTimeout(1500);
             PDU pdu = new PDU();
-            pdu.add(new VariableBinding(new OID(".1.3.6.1.2.1.1.1.0")));
-            pdu.add(new VariableBinding(new OID(".1.3.6.1.2.1.2.1.0")));
-            pdu.add(new VariableBinding(new OID(".1.3.6.1.2.1.1.7.0")));
-            //pdu.add(new VariableBinding(new OID(".1.3.6.1.2.1.2.2.1.8.3")));
+            pdu.add(new VariableBinding(new OID(".1.3.6.1.2.1.1.1.0"))); // infos machine
+            pdu.add(new VariableBinding(new OID(".1.3.6.1.2.1.2.1.0"))); // n interfaces réseau
+            pdu.add(new VariableBinding(new OID(".1.3.6.1.2.1.1.7.0"))); // infos générales
+            //pdu.add(new VariableBinding(new OID(".1.3.6.1.2.1.2.2.1.8.3"))); // état int réseau
             pdu.setType(PDU.GET);
             Snmp snmp = new Snmp(transport);
             ResponseEvent paquetReponse = null;
@@ -130,7 +130,8 @@ public class TaskClient implements Runnable
             
             ARQ req = (ARQ)ois.readObject();
             String numCard = req.getNumCarte();
-            Integer hash = DB.db.get(numCard);
+            //Integer hash = DB.db.get(numCard);                        
+            Integer hash = new String("1234").hashCode();
             
             SecureRandom sr = new SecureRandom();
             int challenge = sr.nextInt();
@@ -139,18 +140,31 @@ public class TaskClient implements Runnable
             oos.writeObject(a);
             
             a = (A)ois.readObject();
-            Integer reponse = a.getNbre();
+            int reponse = a.getNbre();
+            
+            //System.out.println("hash = " + hash);
+            //System.out.println("challenge = " + challenge);
             
             Random r = new Random(hash*challenge);
-            Integer cible = r.nextInt();
+            int cible = r.nextInt();
             
+            //System.out.println("rep : " + reponse);
+            //System.out.println("cible : " + cible);
             ARP arp = new ARP();
             if(reponse == cible)
+            {
                 arp.setType(ARP.SUCCESS);
+                System.out.println("SUCCESS");
+                // Ajout signature
+            }
             else
+            {
                 arp.setType(ARP.FAIL);
+                System.out.println("FAIL");
+            }
             
-            oos.writeObject(arp);
+            
+            //oos.writeObject(arp);
             
             // Envoi vers AHS
             

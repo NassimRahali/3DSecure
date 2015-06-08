@@ -128,6 +128,7 @@ public class OTP extends javax.swing.JFrame
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton1ActionPerformed
     {//GEN-HEADEREND:event_jButton1ActionPerformed
         hash = this.tfPIN.getText().hashCode();
+        System.out.println("hash = " + hash);
         this.tfChallenge.setEnabled(true);
         this.jButton2.setEnabled(true);
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -136,10 +137,9 @@ public class OTP extends javax.swing.JFrame
     {//GEN-HEADEREND:event_jButton2ActionPerformed
         challenge = Integer.parseInt(this.tfChallenge.getText());
         Random r = new Random(hash*challenge);
-        Integer reponse = r.nextInt();
-        String rep = reponse.toString().substring(0, 6);
+        Integer rep = r.nextInt();
         this.tfReponse.setEnabled(true);
-        this.tfReponse.setText(rep);
+        this.tfReponse.setText(rep.toString());
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt)//GEN-FIRST:event_formWindowClosing

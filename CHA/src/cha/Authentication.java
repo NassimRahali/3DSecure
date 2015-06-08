@@ -171,6 +171,8 @@ public class Authentication extends javax.swing.JDialog
             
             OTP calc = new OTP();
             calc.setVisible(true);
+            
+            
         } 
         catch (IOException | ClassNotFoundException ex)
         {
@@ -184,6 +186,7 @@ public class Authentication extends javax.swing.JDialog
         {
             A a = new A(Integer.parseInt(this.tfReponse.getText()));
             oos.writeObject(a);
+            this.setVisible(false);
         } 
         catch (IOException ex)
         {

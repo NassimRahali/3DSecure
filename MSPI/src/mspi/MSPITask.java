@@ -57,8 +57,6 @@ public class MSPITask implements Runnable {
                         VERP bankInfos = verifierCarte(reqmsp);
                         oos.writeObject(bankInfos);
                         break;
-                    case ReqMarchand.ARP:
-                        break;
                     default:
                         break;
                 }

@@ -62,9 +62,9 @@ public class DSTask implements Runnable{
                             contactBank(reqds, this.bankAddr, this.bankPort);
                         }
                         else {
-                            repds = new ReqDS();
-                            repds.setStatus(-1);
-                            oos.writeObject(repds);
+                            VERP repFAIL = new VERP();
+                            repFAIL.setType(VERP.FAIL);                            
+                            oos.writeObject(repFAIL);
                         }
                         break;
                     default:
